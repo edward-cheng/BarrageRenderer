@@ -74,6 +74,56 @@
     }
 }
 
+/// 移除精灵
+- (void)deleteAllSprites:(NSString *)spriteName{
+    if (spriteName.length > 0) {
+        Class class = NSClassFromString(spriteName);
+        //移除界面当前激活精灵
+        for (BarrageSprite * sprite in _activeSprites) {
+            if (!class || [sprite class] == class) {
+                [sprite forceInvalid];//设置精灵过期
+            }
+        }
+        [self dispatchSprites];//再派发一次，派发中_activeSprites会将过期精灵移除
+        
+        //移除过期精灵
+        NSMutableArray *tempDead = [NSMutableArray arrayWithCapacity:_activeSprites.count];
+        for (BarrageSprite * sprite in _deadSprites) {
+            if (!class || [sprite class] == class) {
+                [tempDead addObject:sprite];
+            }
+        }
+        [_deadSprites removeObjectsInArray:tempDead.copy];
+        
+        //移除队列中待激活精灵
+        NSArray *waitingArr = [_waitingSpriteQueue ascendingSprites];
+        NSMutableArray *tempWaiting = [NSMutableArray arrayWithCapacity:waitingArr.count];
+        for (BarrageSprite * sprite in waitingArr) {
+            if (!class || [sprite class] == class) {
+                [tempWaiting addObject:sprite];
+            }
+        }
+        [_waitingSpriteQueue removeSprites:tempWaiting.copy];
+        return;
+    }
+    Class class = NSClassFromString(spriteName);
+    for (BarrageSprite * sprite in _activeSprites) {
+        if (!class || [sprite class] == class) {
+            [sprite forceInvalid];
+        }
+    }
+    
+    [_activeSprites removeAllObjects];
+    
+    //移除过期精灵
+    [_deadSprites removeAllObjects];
+    
+    //移除队列中待激活精灵
+    [_waitingSpriteQueue removeSprites:[_waitingSpriteQueue ascendingSprites]];
+    
+    
+}
+
 /// 停止当前被激活的精灵
 - (void)deactiveAllSprites
 {
@@ -115,7 +165,7 @@
     static NSTimeInterval const DISPATCHER_SMOOTH_FACTOR = 5.0f; // 经验值
     NSTimeInterval currentTime = [self currentTime];
     NSTimeInterval timeWindow = currentTime - _previousTime; // 有可能为正,也有可能为负(如果倒退的话)
-//    NSLog(@"内部时间:%f -- 变化时间:%f",currentTime,timeWindow);
+    //    NSLog(@"内部时间:%f -- 变化时间:%f",currentTime,timeWindow);
     //如果是正, 可能是正常时钟,也可能是快进
     if (timeWindow >= 0) {
         BarrageSpriteQueue *queue = [_waitingSpriteQueue spriteQueueWithDelayLessThanOrEqualTo:currentTime];
@@ -150,7 +200,7 @@
                 count = MAX(1, ceil(count/frequence));
             }
         }
-
+        
         for (NSInteger i = 0; i < count; i++) {
             BarrageSprite *sprite = candidates[i];
             [self activeSprite:sprite];

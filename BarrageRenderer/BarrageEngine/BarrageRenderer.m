@@ -296,7 +296,11 @@ NSString * const kBarrageRendererContextTimestamp = @"kBarrageRendererContextTim
             [_preloadedDescriptors addObject:[descriptor copy]];
         }
     }
+    
+}
 
+- (void)deleteAllSpritesWithName:(NSString *)spriteName{
+    [_dispatcher deleteAllSprites:spriteName];
 }
 
 #pragma mark - update

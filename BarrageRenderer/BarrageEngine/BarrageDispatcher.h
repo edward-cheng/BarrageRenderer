@@ -60,6 +60,9 @@
 /// 停止当前被激活的精灵
 - (void)deactiveAllSprites;
 
+/// 移除精灵
+- (void)deleteAllSprites:(NSString *)spriteName;
+
 /// 平滑系数, 范围为[0,1],当为0时，无平滑; 否则越大，越平滑;
 /// 高平滑值在大量弹幕的时候(一般100+)，可能造成弹幕丢失
 @property(nonatomic,assign)CGFloat smoothness;
