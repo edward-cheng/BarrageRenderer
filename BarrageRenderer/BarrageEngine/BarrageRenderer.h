@@ -108,6 +108,10 @@ typedef NS_ENUM(NSInteger, BarrageSpriteStage) {
 /// 移除标识符为 identifier 的弹幕
 - (void)removeSpriteWithIdentifier:(NSString *)identifier;
 
+///删除精灵
+/// spriteName表示弹幕类名,如果传入nil,则删除所有弹幕精灵
+- (void)deleteAllSpritesWithName:(NSString *)spriteName
+
 /// 逻辑时间,露出参考.
 @property(nonatomic,assign,readonly)NSTimeInterval time;
 

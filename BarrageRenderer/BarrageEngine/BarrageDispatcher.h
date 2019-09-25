@@ -60,7 +60,7 @@
 /// 停止当前被激活的精灵
 - (void)deactiveAllSprites;
 
-/// 移除精灵
+/// 删除精灵
 - (void)deleteAllSprites:(NSString *)spriteName;
 
 /// 平滑系数, 范围为[0,1],当为0时，无平滑; 否则越大，越平滑;
